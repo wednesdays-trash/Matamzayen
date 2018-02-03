@@ -1,9 +1,11 @@
 module Main where
 
 import Matamzayen.Parser
-
-fs :: [Double -> Double]
-fs = parse "^double.double^sqrt.double.double"
+import System.Environment
 
 main :: IO ()
-main = print $ (fs !! 1) 2
+main = do
+  args <- getArgs
+  file <- readFile (head args)
+  let input = read $ args !! 1
+  print $ parse file input

@@ -1,18 +1,24 @@
 module Matamzayen.Parser where
 
 import Data.List.Split
+import Debug.Trace
 
 funcFromString :: Floating a => String -> (a -> a)
 funcFromString str =
   case str of
-    "inc" -> (1 +)
-    "double" -> (2 *)
+    "inc" -> (+ 1)
+    "dec" -> subtract 1
+    "double" -> (* 2)
     "sqrt" -> sqrt
 
-createComposition :: Floating a => [String] -> (a -> a)
-createComposition = foldr1 (.) . map funcFromString
+createComposition :: Floating a => String -> (a -> a)
+createComposition = foldr1 (.) . map funcFromString . splitOn "."
 
-parse :: Floating a => String -> [a -> a]
-parse input = map createComposition funcs
+getMainFunc funcsStrings =
+  createComposition $ tail $ head $ filter (elem '!') funcsStrings
+
+parse :: Floating a => String -> a -> a
+parse program = getMainFunc funcsStrings
   where
-    funcs = map (splitOn ".") $ splitOn "^" (tail input)
+    funcsStrings = splitOn "^" (tail program)
+    funcs = map createComposition (filter (notElem '!') funcsStrings)
