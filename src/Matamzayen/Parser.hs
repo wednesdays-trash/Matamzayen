@@ -3,6 +3,10 @@ module Matamzayen.Parser where
 import Data.List.Split
 import Debug.Trace
 
+mainFuncIdentifier = '@'
+funcSeparator = "."
+funcIdentifier = "^"
+
 funcFromString :: Floating a => String -> (a -> a)
 funcFromString str =
   case str of
@@ -12,13 +16,13 @@ funcFromString str =
     "sqrt" -> sqrt
 
 createComposition :: Floating a => String -> (a -> a)
-createComposition = foldr1 (.) . map funcFromString . splitOn "."
+createComposition = foldr1 (.) . map funcFromString . splitOn funcSeparator
 
 getMainFunc funcsStrings =
-  createComposition $ tail $ head $ filter (elem '!') funcsStrings
+  createComposition $ tail $ head $ filter (elem mainFuncIdentifier) funcsStrings
 
 parse :: Floating a => String -> a -> a
 parse program = getMainFunc funcsStrings
   where
-    funcsStrings = splitOn "^" (tail program)
-    funcs = map createComposition (filter (notElem '!') funcsStrings)
+    funcsStrings = splitOn funcIdentifier (tail program)
+    funcs = map createComposition (filter (notElem mainFuncIdentifier) funcsStrings)
