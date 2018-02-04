@@ -9,20 +9,23 @@ funcIdentifier = "^"
 
 funcFromString :: Floating a => String -> (a -> a)
 funcFromString str =
-  case str of
-    "inc" -> (+ 1)
-    "dec" -> subtract 1
-    "double" -> (* 2)
-    "sqrt" -> sqrt
+    case str of
+        "inc"    -> (+ 1)
+        "dec"    -> subtract 1
+        "double" -> (* 2)
+        "sqrt"   -> sqrt
 
 createComposition :: Floating a => String -> (a -> a)
 createComposition = foldr1 (.) . map funcFromString . splitOn funcSeparator
 
+getMainFunc :: Floating a => [String] -> (a -> a)
 getMainFunc funcsStrings =
-  createComposition $ tail $ head $ filter (elem mainFuncIdentifier) funcsStrings
+    let str = tail . head . filter (elem mainFuncIdentifier) $ funcsStrings
+    in createComposition str
 
 parse :: Floating a => String -> a -> a
 parse program = getMainFunc funcsStrings
   where
     funcsStrings = splitOn funcIdentifier (tail program)
-    funcs = map createComposition (filter (notElem mainFuncIdentifier) funcsStrings)
+    funcsStringWithoutMain = filter (notElem mainFuncIdentifier) funcsStrings
+    funcs = map createComposition funcsStringWithoutMain
