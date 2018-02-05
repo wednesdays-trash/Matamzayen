@@ -1,7 +1,7 @@
 module Matamzayen.Parser where
 
 import Data.List.Split
-import Debug.Trace
+import Matamzayen.BaseFuncs
 
 mainFuncIdentifier = '@'
 funcSeparator = "."
@@ -20,14 +20,8 @@ parse program = getMainFunc funcsStrings
     funcs = map createComposition funcsStringsWithoutMain
 
     funcFromString :: Floating a => String -> (a -> a)
-    funcFromString str =
-        case str of
-            "inc"    -> (+ 1)
-            "dec"    -> subtract 1
-            "double" -> (* 2)
-            "sqrt"   -> sqrt
-            n        -> funcs !! read n
-    
+    funcFromString str = getFuncByString str funcs
+
     createComposition :: Floating a => String -> (a -> a)
     createComposition = foldr1 (.) . map funcFromString . splitOn funcSeparator
     

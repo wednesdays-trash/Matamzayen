@@ -15,7 +15,8 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Matamzayen.Parser
+  exposed-modules:     Matamzayen.Parser,
+                       Matamzayen.BaseFuncs
   build-depends:       base >= 4.7 && < 5
                      , split
   default-language:    Haskell2010
