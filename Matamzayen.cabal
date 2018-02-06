@@ -19,6 +19,7 @@ library
                        Matamzayen.BaseFuncs
   build-depends:       base >= 4.7 && < 5
                      , split
+                     , regex-compat
   default-language:    Haskell2010
 
 executable matamzayen

@@ -3,22 +3,29 @@ module Matamzayen.Parser where
 import Data.List.Split
 import Matamzayen.BaseFuncs
 import Data.Char
+import Text.Regex
 
-mainFuncIdentifier = '@'
+mainFuncNotation = '@'
 funcSeparator = "."
-funcIdentifier = "^"
+funcNotation = "^"
+commentNotation = "#"
 
 removeWhitespaces :: String -> String
 removeWhitespaces = filter (not . isSpace)
+
+removeComments :: String -> String
+removeComments str = subRegex (mkRegex reg) str ""
+  where
+    reg = commentNotation ++ ".+" ++ commentNotation
 
 parse :: Floating a => String -> a -> a
 parse program = getMainFunc funcsStrings
   where
     funcsStrings :: [String]
-    funcsStrings = tail $ splitOn funcIdentifier (removeWhitespaces program)
+    funcsStrings = tail $ splitOn funcNotation ((removeComments . removeWhitespaces) program)
 
     funcsStringsWithoutMain :: [String]
-    funcsStringsWithoutMain = filter (notElem mainFuncIdentifier) funcsStrings
+    funcsStringsWithoutMain = filter (notElem mainFuncNotation) funcsStrings
 
     funcs :: Floating a => [a -> a]
     funcs = map createComposition funcsStringsWithoutMain
@@ -31,5 +38,5 @@ parse program = getMainFunc funcsStrings
     
     getMainFunc :: Floating a => [String] -> (a -> a)
     getMainFunc funcsStrings =
-        let str = tail . head . filter (elem mainFuncIdentifier) $ funcsStrings
+        let str = tail . head . filter (elem mainFuncNotation) $ funcsStrings
         in createComposition str
