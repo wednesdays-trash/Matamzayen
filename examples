@@ -1,7 +1,18 @@
-^double.double.inc
+%^double.double.inc
 
 ^inc.2
 
 ^double.double #neat comment#
 
 ^@0.1
+
+
+
+%^double.double.inc
+
+^inc.2
+
+^double.double #neat comment#
+
+^@1.0
+

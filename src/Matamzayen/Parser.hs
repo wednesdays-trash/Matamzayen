@@ -1,16 +1,17 @@
 module Matamzayen.Parser where
 
-import Data.List.Split
-import Matamzayen.BaseFuncs
-import Data.Char
-import Text.Regex
+import           Data.Char
+import           Data.List.Split
+import           Matamzayen.BaseFuncs
+import           Text.Regex
 
 mainFuncNotation = '@'
 funcSeparator = "."
 funcNotation = "^"
+blockSeparator = "%"
 commentNotation = "#"
 
--- ^ A string containing a composition of function names. Ex: "double.inc.sqrt", "dec.negate" etc
+-- | A string containing a composition of function names. Ex: "double.inc.sqrt", "dec.negate" etc
 type FuncString = String
 
 removeWhitespaces :: String -> String
@@ -18,11 +19,10 @@ removeWhitespaces = filter (not . isSpace)
 
 removeComments :: String -> String
 removeComments str = subRegex (mkRegex reg) str ""
-  where
-    reg = commentNotation ++ ".+" ++ commentNotation
+  where reg = commentNotation ++ ".+" ++ commentNotation
 
-parse :: Floating a => String -> a -> a
-parse program = getMainFunc funcsStrings
+parseBlock :: Floating a => String -> a -> a
+parseBlock program = getMainFunc funcsStrings
   where
     -- | An array containing each function declaration in the program as a string.
     --   For example, if the program is "^inc^double.sqrt", funcsString will contain ["inc", "double.sqrt"]
@@ -51,3 +51,12 @@ parse program = getMainFunc funcsStrings
     getMainFunc funcsStrings =
         let str = tail . head . filter (elem mainFuncNotation) $ funcsStrings
         in createComposition str
+
+applyEach3 f (x:xs) (y:ys) = f x y : applyEach3 f xs ys
+applyEach3 _ [] []         = []
+
+-- | Splits a program into blocks, parses each one of them using its corresponding
+--   input, and returns a list containing every output calculated.
+parse :: Floating a => String -> [a] -> [a]
+parse program = applyEach3 parseBlock blocks
+  where blocks = splitOn blockSeparator (tail program)

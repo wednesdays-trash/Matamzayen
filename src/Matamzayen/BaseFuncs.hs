@@ -1,5 +1,7 @@
 module Matamzayen.BaseFuncs where
 
+import Control.Monad
+
 getFuncByString :: Floating a => String -> [a -> a] -> (a -> a)
 getFuncByString str userFuncs =
   case str of
@@ -10,4 +12,10 @@ getFuncByString str userFuncs =
     "sqrt"   -> sqrt
     "negate" -> negate
     "zero"   -> const 0
+    "id"     -> id
+    "square" -> join (*)
+    "exp"    -> exp
+    "sin"    -> sin
+    "cos"    -> cos
+    "tan"    -> tan
     n        -> userFuncs !! read n
