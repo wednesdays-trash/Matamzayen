@@ -2,16 +2,20 @@ module Matamzayen.Parser where
 
 import Data.List.Split
 import Matamzayen.BaseFuncs
+import Data.Char
 
 mainFuncIdentifier = '@'
 funcSeparator = "."
 funcIdentifier = "^"
 
+removeWhitespaces :: String -> String
+removeWhitespaces = filter (not . isSpace)
+
 parse :: Floating a => String -> a -> a
 parse program = getMainFunc funcsStrings
   where
     funcsStrings :: [String]
-    funcsStrings = tail $ splitOn funcIdentifier program
+    funcsStrings = tail $ splitOn funcIdentifier (removeWhitespaces program)
 
     funcsStringsWithoutMain :: [String]
     funcsStringsWithoutMain = filter (notElem mainFuncIdentifier) funcsStrings
