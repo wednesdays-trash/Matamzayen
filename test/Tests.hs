@@ -10,7 +10,7 @@ exampleProgram =
 
 main = defaultMain (testGroup "Parser tests" tests)
   where
-    tests = [removeWhitespacesAndCommentsTest, parseBlockTest]
+    tests = [removeWhitespacesAndCommentsTest, parseTest]
 
 removeWhitespacesAndCommentsTest =
   testCase "Testing removeWhitespaces and removeComments" assertion
@@ -22,7 +22,7 @@ removeWhitespacesAndCommentsTest =
         expectedResult
         ((removeWhitespaces . removeComments) exampleProgram)
 
-parseBlockTest =
+parseTest =
   testCase "Testing actual program parsing and evaluation" assertion
   where
     input = 3
@@ -31,4 +31,4 @@ parseBlockTest =
       assertEqual
         "Should evaluate the given program and apply its main function on the input"
         expectedResult
-        (parseBlock exampleProgram input)
+        (parse exampleProgram input)

@@ -21,4 +21,5 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 .idea/
+.directory
 Matamzayen.iml
