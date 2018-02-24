@@ -7,8 +7,8 @@ import qualified Safe
 isCurried :: String -> Bool
 isCurried = elem ' '
 
-getTwoParamFuncByString :: String -> (Double -> Double)
-getTwoParamFuncByString str = func (read param)
+getCurriedFuncByString :: String -> (Double -> Double)
+getCurriedFuncByString str = func (read param)
   where
     s = splitOn " " str
     funcName = head s
@@ -16,11 +16,14 @@ getTwoParamFuncByString str = func (read param)
     func =
       case funcName of
         "add" -> (+)
+        "sub" -> (-)
+        "div" -> (/)
+        "mul" -> (*)
 
 getFuncByString :: String -> [Double -> Double] -> (Double -> Double)
 getFuncByString str userFuncs =
   if isCurried str
-    then getTwoParamFuncByString str
+    then getCurriedFuncByString str
     else case str of
            "inc" -> (+ 1)
            "dec" -> subtract 1
