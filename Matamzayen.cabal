@@ -1,5 +1,5 @@
 name:                Matamzayen
-version:             0.1.0.0
+version:             0.1.0
 -- synopsis:
 -- description:
 homepage:            https://github.com/githubuser/Matamzayen#readme
@@ -22,6 +22,7 @@ library
                      , regex-compat
                      , hint
                      , safe
+                     , unordered-containers
   default-language:    Haskell2010
 
 executable matamzayen
